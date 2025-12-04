@@ -1,0 +1,1 @@
+drop table roles, acces, bills, bill_details, products, users, medicalrecords, memberships, usermemberships;

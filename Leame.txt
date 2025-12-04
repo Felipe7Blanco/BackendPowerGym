@@ -1,0 +1,73 @@
+Proyecto creado con NestJS y NodeJS, usando las dependencias de yarn
+ya que al día de hoy 30/09/2025, se ha presentado un problema con
+NPM y es que han detectado un gusano dentro de sus librerias, se especula
+de un ataque a NPM.
+
+instalación de nodejs desde su web
+luego intalar el CLI de nestjs 
+npm install -g @nestjs/cli
+y verificamos la version con:
+nest --version
+
+si no sale versión debemos añadirlo al path de windows
+# crear proyecto nest
+
+
+
+================================================================
+                INSTALACIÓN DE PAQUETES
+================================================================
+
+tener la base de datos ya definida y creada,
+además de esto no se nos puede olvidar crear el 
+archivo .env con la info de la base de datos
+
+yarn add sharp
+yarn add express
+yarn add typeorm
+yarn add @nestjs/config
+yarn add @nestjs/typeorm
+yarn add typeorm-naming-strategies
+yarn add bcryptjs
+yarn add formidable
+yarn add jsonwebtoken
+
+
+yarn add @types/express --save-dev
+yarn add @types/bcryptjs --save-dev
+yarn add @types/formidable --save-dev
+yarn add @types/jsonwebtoken --save-dev
+
+yarn add deasync @types/deasync
+yarn add deasync uuid 
+yarn add --save-dev @types/uuid
+
+==================================================================
+                            CREAR MODELOS
+==================================================================
+nest g cl models/"nombre de la tabla" --no-spec --skip-
+
+==================================================================
+                            CREAR MODULOS
+==================================================================
+Dependiendo de la tabla, puede ser privada o publica.
+caso privada:
+nest g modulo/private/"nombre del modulo" --no-spec --skip-
+caso publica:
+nest g modulo/public/"nombre del modulo" --no-spec --skip-
+
+==================================================================
+                            COMANDOS 
+==================================================================
+Correr el proyecto
+nest start --watch
+
+==================================================================
+                            ARCHIVOS IMPORTANTES
+==================================================================
+ 1. main.ts:
+ aquí se configura la conexión a la base de datos hecha en el archivo .env.
+ 2.  crear un modulo llamado "config/connection/connection.module.ts"
+    llevara tambien gran parte de la configuración con la base de datos.
+3. app.module.ts:
+    
