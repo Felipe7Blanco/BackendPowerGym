@@ -42,6 +42,49 @@ yarn add deasync @types/deasync
 yarn add deasync uuid 
 yarn add --save-dev @types/uuid
 
+============================================================================
+                    PAQUETE IMPORTANTE "SWAGGER"
+============================================================================
+yarn add @nestjs/swagger swagger-ui-express
+
+luego de instalar esta dependencia debemos ir al main.ts y agregar: 
+
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+// 1. Crear la configuración base de Swagger
+  const config = new DocumentBuilder()
+    .setTitle('API Power Gym')
+    .setDescription(
+      'Documentación oficial del backend para el sistema de gestión del gimnasio.',
+    )
+    .setVersion('1.0')
+    // Si manejas autenticación con JWT, esto añade el botón de "Authorize"
+    .addBearerAuth()
+    .build();
+
+  // 2. Crear el documento a partir de la configuración
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+
+  // 3. Montar la interfaz gráfica de Swagger en una ruta específica
+  SwaggerModule.setup('api/docs', app, documentFactory);
+
+============================================================================
+                    info sobre "SWAGGER"
+============================================================================
+Etiquetas que le dan metadatos a nestjs para construir la interfaz gráifica, dentro 
+de las más comunes tenemos las de controladores:
+@ApiTags(): agrupa los endpoints bajo uan categoría (ej: "usuarios").
+@ApiOperation(): Describe que hace el endpoint.
+@ApiResponse(): Documenta las posibles respuesta (200 ok, 201 creado, 400 error etc).
+@ApiParam() y @ApiBody(): Describen los parametros de la URL y el cuerpo de la petición.
+
+luego para mostrar el body requerido necesitamos editar nuestro modelo o entidad y agregar otras
+etiquetas:
+@ApiProperty: le dice a swagger que atributos existen y son requeridos
+@ApiPropertyOptional: marca el campo como no obligatorio en la documentación.
+
+
+
+
 ==================================================================
                             CREAR MODELOS
 ==================================================================
@@ -69,5 +112,5 @@ nest start --watch
  aquí se configura la conexión a la base de datos hecha en el archivo .env.
  2.  crear un modulo llamado "config/connection/connection.module.ts"
     llevara tambien gran parte de la configuración con la base de datos.
-3. app.module.ts:
+3. app.module.ts: esta clase sirve para 
     

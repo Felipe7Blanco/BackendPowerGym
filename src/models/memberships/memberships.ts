@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Bills } from "../bills/bills";
 import { Usermemberships } from "../usermemberships/usermemberships";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 @Entity({name:"memberships", schema:"public"})
 export class Memberships {
@@ -8,9 +9,11 @@ export class Memberships {
     @PrimaryGeneratedColumn({type:"integer", name:"id_membership"})
     public idMembership: number;
 
+    @ApiProperty({ description: 'Nombres de membresía', example: 'Plan estandar' })
     @Column({type:"varchar", name:"name_membership"})
     public nameMembership: string;
 
+    @ApiProperty({ description: 'Precio de la membresía', example: 60000.0 })
     @Column({type:"integer", name:"price_membership"})
     public priceMembership: number;
 
@@ -23,7 +26,7 @@ export class Memberships {
 
     /**foranea userMembership */
     @ManyToOne(() =>Usermemberships, (objUm:Usermemberships)=> objUm.idMemShip)
-    public userMemberships?: Usermemberships;
+    public userMemberships?: Usermemberships[];
 
     /**constructor */
     constructor(id:number, name:string, price:number){
