@@ -42,6 +42,8 @@ yarn add deasync @types/deasync
 yarn add deasync uuid 
 yarn add --save-dev @types/uuid
 
+npm install @nestjs/jwt @nestjs/passport passport passport-jwt --save
+
 ============================================================================
                     PAQUETE IMPORTANTE "SWAGGER"
 ============================================================================

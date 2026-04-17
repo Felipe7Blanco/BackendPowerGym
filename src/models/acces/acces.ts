@@ -12,15 +12,20 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 @Entity({ name: 'acces', schema: 'public' })
 export class acces {
-  @PrimaryGeneratedColumn({ type: 'integer', name: 'id_user' })
+  // Cambiado de PrimaryGeneratedColumn a PrimaryColumn
+  // Este campo NO debe ser auto-generado porque debe coincidir con el ID del usuario
+  // Es la llave primaria de esta tabla y también la foreign key hacia users
+  @PrimaryColumn({ type: 'integer', name: 'id_user' })
   public idUser: number;
 
   @ApiProperty({ description: 'Correo del usuario', example: 'juan@mail.com' })
   @Column({ type: 'varchar', name: 'name_acces', length: 250, nullable: false })
   public nameAcces: string;
 
-
-  @ApiProperty({ description: 'Contraseña del usuario', example: '*************' })
+  @ApiProperty({
+    description: 'Contraseña del usuario',
+    example: '*************',
+  })
   @Column({ type: 'varchar', name: 'password_access', nullable: false })
   public passwordAccess: string;
 
@@ -30,7 +35,9 @@ export class acces {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  @JoinColumn({ name: 'idUser', referencedColumnName: 'idUser' })
+  // Importante: name debe coincidir con el nombre de la columna primaria (id_user)
+  // referencedColumnName es la columna en la tabla users (idUser)
+  @JoinColumn({ name: 'id_user', referencedColumnName: 'idUser' })
   public user?: Users;
 
   constructor(id: number, name: string, password: string, status: number) {

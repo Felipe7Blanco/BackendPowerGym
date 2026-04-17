@@ -23,7 +23,7 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 
-@ApiTags('Membership') 
+@ApiTags('Membership')
 @Controller('membership')
 export class MembershipController {
   constructor(private readonly MemberService: MembershipService) {}
@@ -117,6 +117,9 @@ export class MembershipController {
     status: 200,
     description: 'membresía actualizado correctamente.',
   })
+
+
+  
   @ApiResponse({ status: 406, description: 'Código de membresía no válido.' })
   public actualizarMemberships(
     @Body() objActualziar: Memberships,
@@ -125,6 +128,7 @@ export class MembershipController {
     const codigo: number = Number(parametros.codMemberships);
     if (!isNaN(codigo)) {
       return this.MemberService.actualizar(objActualziar, codigo);
+      return new HttpException('Membresía acutalizada', HttpStatus.ACCEPTED);
     } else {
       return new HttpException(
         'Codgio de Memberships no valido',
@@ -147,7 +151,10 @@ export class MembershipController {
     description: 'ID numérico del membresía a eliminar',
     type: Number,
   })
-  @ApiResponse({ status: 200, description: 'membresía eliminado correctamente.' })
+  @ApiResponse({
+    status: 200,
+    description: 'membresía eliminado correctamente.',
+  })
   @ApiResponse({ status: 406, description: 'Código no encontrado.' })
   public delete(@Param() parametro: any): any {
     const codigo: number = Number(parametro.idMembership);
@@ -165,24 +172,24 @@ export class MembershipController {
    * =========================================================================*/
   @Put('/sdelete/:idMembership')
   @ApiOperation({
-      summary: 'Desactivar un membresía (Soft Delete)',
-      description:
-        'Marca al membresía como inactivo sin borrarlo físicamente de la base de datos.',
-    })
-    @ApiParam({
-      name: 'codMember',
-      description: 'ID numérico del membresía a desactivar',
-      type: Number,
-    })
-    @ApiBody({
-      type: Memberships,
-      description: 'Datos necesarios para el soft delete (ej. estado)',
-    })
-    @ApiResponse({
-      status: 200,
-      description: 'membresía desactivado correctamente.',
-    })
-    @ApiResponse({ status: 406, description: 'Código de membresía no válido.' })
+    summary: 'Desactivar un membresía (Soft Delete)',
+    description:
+      'Marca al membresía como inactivo sin borrarlo físicamente de la base de datos.',
+  })
+  @ApiParam({
+    name: 'codMember',
+    description: 'ID numérico del membresía a desactivar',
+    type: Number,
+  })
+  @ApiBody({
+    type: Memberships,
+    description: 'Datos necesarios para el soft delete (ej. estado)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'membresía desactivado correctamente.',
+  })
+  @ApiResponse({ status: 406, description: 'Código de membresía no válido.' })
   public softdelete(
     @Body() objActualizar: Memberships,
     @Param() parametro: any,

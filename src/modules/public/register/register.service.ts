@@ -18,11 +18,16 @@ export class RegisterService {
 
   public async newUser(objAcceso: acces, objUser: Users): Promise<any> {
     try {
+      console.log('Starting registration process...');
       const userExist = await this.accesRepository.findBy({
         nameAcces: objAcceso.nameAcces,
       });
+      console.log('userExist length:', userExist.length);
       if (userExist.length == 0) {
-        let codUser = (await this.userReporitory.save(objUser)).idUser;
+        console.log('Saving user...');
+        const savedUser = await this.userReporitory.save(objUser);
+        console.log('Saved user:', savedUser);
+        let codUser = savedUser.idUser;
 
         const claveCifrada = hashSync(objAcceso.passwordAccess);
         objAcceso.idUser = codUser;
@@ -47,12 +52,24 @@ export class RegisterService {
           );
         }
 
+        // Generar token con GenerarTokens (método existente)
+        console.log('datosSesion[0]:', datosSesion[0]);
+        console.log('datosSesion[0] keys:', Object.keys(datosSesion[0] || {}));
+
         const token = GenerarTokens.procesarRespuesta(datosSesion[0]);
 
+        console.log('Token generado:', token);
+        console.log(
+          'Token decodificado:',
+          JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()),
+        );
+
         if (token !== '') {
-         // throw new HttpException({ tokenApp: token }, HttpStatus.OK);
-        return {correo: objAcceso.nameAcces ,tokenApp: token };
-        }else {
+          return {
+            correo: objAcceso.nameAcces,
+            tokenApp: token,
+          };
+        } else {
           return new HttpException(
             'Fallo al generar el token',
             HttpStatus.METHOD_NOT_ALLOWED,
@@ -65,7 +82,8 @@ export class RegisterService {
         );
       }
     } catch (miError) {
-      console.error('error en new user', miError)
+      console.error('error in new user:', miError);
+      //console.error('Error stack:', miError.stack);
       throw new HttpException(
         '!fallo al registrar el usuario',
         HttpStatus.CONFLICT,

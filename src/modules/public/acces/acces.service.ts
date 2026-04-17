@@ -4,12 +4,16 @@ import { acces } from 'src/models/acces/acces';
 import { DataSource, Repository } from 'typeorm';
 import { ACCESO_SQL } from '../register/register_sql';
 import GenerarTokens from 'src/utilities/generarTokens';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AccesService {
   private accesRepository: Repository<acces>;
 
-  constructor(private poolConexion: DataSource) {
+  constructor(
+    private poolConexion: DataSource,
+    private jwtService: JwtService,
+  ) {
     this.accesRepository = poolConexion.getRepository(acces);
   }
 
@@ -35,7 +39,7 @@ export class AccesService {
 
       const claveAcceso = usuarioExiste[0].passwordAccess;
       console.log('Hash almacenado en BD:', claveAcceso);
-      
+
       // CAMBIO 1: Comparar la contraseña en texto plano con el hash bcrypt
       const passwordMatch = compareSync(objAcceso.passwordAccess, claveAcceso);
       console.log('¿Contraseña coincide?:', passwordMatch);
@@ -64,6 +68,14 @@ export class AccesService {
 
       const tokenSistema = GenerarTokens.procesarRespuesta(datoSesion[0]);
 
+      // Nueva generación de JWT para uso en rutas protegidas
+      const jwtPayload: any = {
+        userId: usuarioExiste[0]?.idUser,
+        login: usuarioExiste[0]?.nameAcces,
+        session: datoSesion[0],
+      };
+      const tokenJwt = this.jwtService.sign(jwtPayload);
+
       if (!tokenSistema || tokenSistema === '') {
         throw new HttpException(
           'Fallo al generar la autenticación',
@@ -72,10 +84,9 @@ export class AccesService {
       }
 
       console.log('Token generado exitosamente');
-      
-      // CAMBIO 3: Retornar objeto con tokenApp directamente
-      return { tokenApp: tokenSistema };
 
+      // CAMBIO 3: Retornar objeto con tokenApp directamente y tokenJwt para JWT auth
+      return { tokenApp: tokenSistema, tokenJwt };
     } catch (error) {
       console.error('=== ERROR EN INICIO DE SESIÓN ===');
       console.error(error);

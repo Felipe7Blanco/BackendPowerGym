@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { json, urlencoded } from 'express';
 /** importación de swagger */
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { error } from 'console';
 
 /** Fin de importaciones */
 async function bootstrap() {
@@ -43,10 +44,17 @@ async function bootstrap() {
 
   // 4. Iniciar la aplicación (¡Único llamado a listen al final!)
   await app.listen(port, () => {
-    console.log(`Servidor de Power Gym funcionando en el puerto: ${port}`);
+    try {
+      console.log(`Servidor de Power Gym funcionando en el puerto: ${port}`);
     console.log(
       `Documentación Swagger disponible en: http://localhost:${port}/api/docs`,
+
     );
+    } catch (miError) {
+      console.log(miError)
+    }
+    
+    
   });
 }
 

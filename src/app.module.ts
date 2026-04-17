@@ -11,7 +11,11 @@ import { ConnectionModule } from './config/connection/connection/connection.modu
 import { ModulesModule } from './modules/modules.module';
 import { PublicModule } from './modules/public/public.module';
 import { PrivateModule } from './modules/private/private.module';
-import { Seguridad } from './middleware/seguridad/seguridad';
+import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -20,14 +24,18 @@ import { Seguridad } from './middleware/seguridad/seguridad';
     ModulesModule,
     PublicModule,
     PrivateModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET || 'default_secret',
+      signOptions: { expiresIn: '1h' },
+    }),
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, { provide: APP_GUARD, useClass: JwtAuthGuard }],
 })
 export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(Seguridad)
-      .forRoutes({ path: '/private/*', method: RequestMethod.ALL });
+    // No global middleware; authentication is handled via JwtAuthGuard
   }
 }

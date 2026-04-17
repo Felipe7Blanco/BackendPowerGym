@@ -105,7 +105,10 @@ export class Users {
   // documentamos como opcionales para no saturar el JSON de ejemplo en Swagger.
   // ==========================================================================
 
-  @ApiPropertyOptional({ description: 'ID del Rol asignado al usuario', example:1 })
+  @ApiPropertyOptional({
+    description: 'ID del Rol asignado al usuario',
+    example: 1,
+  })
   @ManyToOne(() => Roles, (objRole: Roles) => objRole.User, {
     onDelete: 'RESTRICT',
     onUpdate: 'RESTRICT',
@@ -120,7 +123,6 @@ export class Users {
   })
   public idUserBill?: Bills[];
 
-  
   //@ApiPropertyOptional({ description: 'ID de Registro médico extendido del usuario', example: 1 })
   @OneToOne(
     () => MedicalRecords,
@@ -129,7 +131,7 @@ export class Users {
   public id_medicalRecord?: MedicalRecords[];
 
   //@ApiPropertyOptional({ description: 'ID Credenciales de acceso del usuario', example:1 })
-  @OneToMany(() => acces, (objAcces: acces) => objAcces.passwordAccess, {
+  @OneToMany(() => acces, (objAcces: acces) => objAcces.user, {
     cascade: true,
     onUpdate: 'CASCADE',
   })
